@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0, 0%, 100%;
+    --foreground: 222.2, 84%, 4.9%;
+
+    --card: 0, 0%, 100%;
+    --card-foreground: 222.2, 84%, 4.9%;
+
+    --popover: 0, 0%, 100%;
+    --popover-foreground: 222.2, 84%, 4.9%;
+
+    /* primary 색상을 동양생명 주황색 계열로 변경 */
+    --primary: 29, 100%, 50%; /* #FF9800 */
+    --primary-foreground: 210, 40%, 98%; /* 흰색 계열 */
+
+    /* secondary 색상을 동양생명 파란색 계열로 변경 */
+    --secondary: 207, 90%, 54%; /* #2196F3 */
+    --secondary-foreground: 222.2, 47.4%, 11.2%; /* 어두운 색 계열 */
+
+    --muted: 210, 40%, 96.1%;
+    --muted-foreground: 215.4, 16.3%, 46.9%;
+
+    --accent: 210, 40%, 96.1%;
+    --accent-foreground: 222.2, 47.4%, 11.2%;
+
+    --destructive: 0, 84.2%, 60.2%;
+    --destructive-foreground: 210, 40%, 98%;
+
+    --border: 214.3, 31.8%, 91.4%;
+    --input: 214.3, 31.8%, 91.4%;
+    --ring: 222.2, 84%, 4.9%;
+
+    --radius: 0.5rem;
+
+    /* 중립 색상 (회색 계열) */
+    --neutral-50: 0, 0%, 98%; /* #FAFAFA */
+    --neutral-100: 0, 0%, 96%; /* #F5F5F5 */
+    --neutral-200: 0, 0%, 93%; /* #EEEEEE */
+    --neutral-300: 0, 0%, 88%; /* #E0E0E0 */
+    --neutral-400: 0, 0%, 74%; /* #BDBDBD */
+    --neutral-500: 0, 0%, 62%; /* #9E9E9E */
+    --neutral-600: 0, 0%, 46%; /* #757575 */
+    --neutral-700: 0, 0%, 38%; /* #616161 */
+    --neutral-800: 0, 0%, 26%; /* #424242 */
+    --neutral-900: 0, 0%, 13%; /* #212121 */
+
+    /* 커스텀 스크롤바 변수 */
+    --scrollbar-width: 8px;
+    --scrollbar-track-color: hsl(var(--neutral-100));
+    --scrollbar-thumb-color: hsl(var(--neutral-300));
+    --scrollbar-thumb-hover-color: hsl(var(--neutral-400));
+    --scrollbar-thumb-radius: 4px;
+  }
+
+  .dark {
+    --background: 222.2, 84%, 4.9%;
+    --foreground: 210, 40%, 98%;
+
+    --card: 222.2, 84%, 4.9%;
+    --card-foreground: 210, 40%, 98%;
+
+    --popover: 222.2, 84%, 4.9%;
+    --popover-foreground: 210, 40%, 98%;
+
+    /* primary 색상을 동양생명 주황색 계열로 변경 (다크 모드) */
+    --primary: 29, 100%, 50%; /* #FF9800 */
+    --primary-foreground: 222.2, 47.4%, 11.2%;
+
+    /* secondary 색상을 동양생명 파란색 계열로 변경 (다크 모드) */
+    --secondary: 207, 90%, 54%; /* #2196F3 */
+    --secondary-foreground: 210, 40%, 98%;
+
+    --muted: 217.2, 32.6%, 17.5%;
+    --muted-foreground: 215, 20.2%, 65.1%;
+
+    --accent: 217.2, 32.6%, 17.5%;
+    --accent-foreground: 210, 40%, 98%;
+
+    --destructive: 0, 62.8%, 30.6%;
+    --destructive-foreground: 210, 40%, 98%;
+
+    --border: 217.2, 32.6%, 17.5%;
+    --input: 217.2, 32.6%, 17.5%;
+    --ring: 212.7, 26.8%, 83.9%;
+
+    /* 중립 색상 (회색 계열) (다크 모드) */
+    --neutral-50: 0, 0%, 98%; /* #FAFAFA */
+    --neutral-100: 0, 0%, 96%; /* #F5F5F5 */
+    --neutral-200: 0, 0%, 93%; /* #EEEEEE */
+    --neutral-300: 0, 0%, 88%; /* #E0E0E0 */
+    --neutral-400: 0, 0%, 74%; /* #BDBDBD */
+    --neutral-500: 0, 0%, 62%; /* #9E9E9E */
+    --neutral-600: 0, 0%, 46%; /* #757575 */
+    --neutral-700: 0, 0%, 38%; /* #616161 */
+    --neutral-800: 0, 0%, 26%; /* #424242 */
+    --neutral-900: 0, 0%, 13%; /* #212121 */
+
+    /* 커스텀 스크롤바 변수 (다크 모드) */
+    --scrollbar-track-color: hsl(var(--neutral-800));
+    --scrollbar-thumb-color: hsl(var(--neutral-600));
+    --scrollbar-thumb-hover-color: hsl(var(--neutral-500));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Noto Sans KR', 'Pretendard', 'Roboto', sans-serif;
+  }
+}
+
+/* 커스텀 스크롤바 스타일 */
+/* Webkit (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track-color);
+  border-radius: var(--scrollbar-thumb-radius);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb-color);
+  border-radius: var(--scrollbar-thumb-radius);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover-color);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color);
+}
+
+.animate-blink {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
