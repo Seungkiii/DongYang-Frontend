@@ -3,10 +3,13 @@ name: Deploy to EC2
 on:
   push:
     branches: 
+      - main
       - ${{ secrets.GIT_BRANCH || 'main' }}
   pull_request:
     branches: 
+      - main
       - ${{ secrets.GIT_BRANCH || 'main' }}
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -32,7 +35,7 @@ jobs:
       run: npm run build
 
     - name: Deploy to EC2
-      if: github.ref == 'refs/heads/${{ secrets.GIT_BRANCH || 'main' }}'
+      if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/${{ secrets.GIT_BRANCH || 'main' }}'
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.EC2_PUBLIC_IP }}
