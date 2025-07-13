@@ -103,15 +103,18 @@
     --scrollbar-track-color: hsl(var(--neutral-800));
     --scrollbar-thumb-color: hsl(var(--neutral-600));
     --scrollbar-thumb-hover-color: hsl(var(--neutral-500));
+    --scrollbar-thumb-radius: 4px;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border; /* 변경된 부분 */
+    border-color: hsl(var(--border)); /* 추가된 부분 */
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background)); /* @apply 대신 직접 적용 */
+    color: hsl(var(--foreground)); /* @apply 대신 직접 적용 */
     font-family: 'Noto Sans KR', 'Pretendard', 'Roboto', sans-serif;
   }
 }

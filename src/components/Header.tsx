@@ -10,7 +10,7 @@ const Header: React.FC = () => {
       <div className="flex items-center">
         {/* 동양생명 가상 로고 */}
         <img src="/vite.svg" alt="Dongyang Life Logo" className="h-8 w-8 mr-2" /> {/* 임시 로고 */}
-        <h1 className="text-xl font-semibold text-secondary-600 dark:text-secondary-400">동양생명 챗봇</h1>
+        <h1 className="text-xl font-semibold text-secondary dark:text-secondary-foreground">동양생명 챗봇</h1>
       </div>
       <div className="flex items-center space-x-4">
         <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-400">

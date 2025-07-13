@@ -1,7 +1,9 @@
 import axios from 'axios';
 import type { ChatRequest, ChatResponse } from '../types/chat';
 
-const API_BASE_URL = import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:8080/api'; // 백엔드 기본 URL
+// 배포 환경에서는 EC2 IP 주소 사용, 개발 환경에서는 localhost 사용
+const API_BASE_URL = import.meta.env.VITE_BACKEND_API_URL || 
+  (window.location.hostname === 'localhost' ? 'http://localhost:8080/api' : 'http://15.164.93.58:8080/api');
 
 const chatApiClient = axios.create({
   baseURL: API_BASE_URL,

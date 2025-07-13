@@ -18,7 +18,6 @@ const ChatContainer: React.FC = () => {
     addMessage,
     setQuestionType,
     setIsLoading,
-    clearMessages,
   } = useChatStore();
 
   const scrollToBottom = () => {
@@ -78,10 +77,11 @@ const ChatContainer: React.FC = () => {
     }
   };
 
-  const handleNewChat = () => {
-    clearMessages();
-    setShowWelcome(true);
-  };
+  // 새 채팅 시작 함수 (향후 사용 예정)
+  // const handleNewChat = () => {
+  //   clearMessages();
+  //   setShowWelcome(true);
+  // };
 
   return (
     <div className="flex flex-col h-full relative">
