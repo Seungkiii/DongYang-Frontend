@@ -19,7 +19,8 @@ export const chatService = {
   healthCheck: async (): Promise<boolean> => {
     try {
       const response = await chatApiClient.get('/chat/test');
-      return response.status === 200 && response.data === 'ChatController가 정상적으로 등록되었습니다!';
+      console.log('Health check response:', response.data);
+      return response.status === 200;
     } catch (error) {
       console.error('Health check failed:', error);
       return false;

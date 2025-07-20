@@ -1,22 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AlertCircle, Bot } from 'lucide-react';
-import { ChatMessage } from './ChatMessage';
+import { AlertCircle } from 'lucide-react';
+import UserMessage from './UserMessage';
+import AssistantMessage from './AssistantMessage';
+import FallbackMessage from './FallbackMessage';
 import { ChatInput } from './ChatInput';
 import { useChatStore } from '../store/chatStore';
 import { chatService } from '../services/chatApi';
-import WelcomeScreen from './WelcomeScreen';
+// import WelcomeScreen from './WelcomeScreen'; // Not used, can be re-enabled if needed
 
 const ChatContainer: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [connectionStatus, setConnectionStatus] = useState<'checking' | 'connected' | 'disconnected'>('checking');
-  const [showWelcome, setShowWelcome] = useState(true);
-  
+
   const {
     messages,
-    questionType,
     isLoading,
     addMessage,
-    setQuestionType,
     setIsLoading,
   } = useChatStore();
 
@@ -51,17 +50,17 @@ const ChatContainer: React.FC = () => {
     };
     addMessage(userMessage);
     setIsLoading(true);
-    setShowWelcome(false);
+
     try {
-      const response = await chatService.sendMessage(content);
+      const aiResponse = await chatService.sendMessage(content);
       addMessage({
         id: Date.now().toString(),
         type: 'assistant',
-        content: response.answer,
+        content: aiResponse.answer ?? '',
         timestamp: new Date(),
-        contexts: response.contexts,
-        confidence: response.confidence,
-        processingTime: response.processingTime,
+        confidence: aiResponse.confidence,
+        contexts: aiResponse.contexts,
+        processingTime: aiResponse.processingTime,
       });
       setConnectionStatus('connected');
     } catch (error) {
@@ -76,6 +75,7 @@ const ChatContainer: React.FC = () => {
       setIsLoading(false);
     }
   };
+
 
   // 새 채팅 시작 함수 (향후 사용 예정)
   // const handleNewChat = () => {
@@ -95,54 +95,40 @@ const ChatContainer: React.FC = () => {
       )}
 
       <main className="flex-1 overflow-y-auto p-4">
-        <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
-          {showWelcome && messages.length === 0 ? (
-            <WelcomeScreen 
-              questionType={questionType} 
-              setQuestionType={setQuestionType} 
-            />
-          ) : (
-            <div className="max-w-3xl mx-auto">
-              {messages.map((message) => (
-                <ChatMessage 
-                  key={message.id} 
-                  message={message}
-                  onCopy={(text) => navigator.clipboard.writeText(text)}
-                />
-              ))}
-              {isLoading && (
-                <div className="flex justify-start mb-8">
-                  <div className="max-w-[85%] lg:max-w-[75%]">
-                    <div className="flex items-start space-x-3 mb-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-500 shadow-soft">
-                        <Bot className="h-5 w-5 text-white" />
-                      </div>
-                      <div className="flex-1 pt-1">
-                        <span className="text-sm font-semibold text-neutral-900 dark:text-neutral-50">
-                          AI 어시스턴트
-                        </span>
-                      </div>
-                    </div>
-                    <div className="bg-white dark:bg-neutral-800 rounded-2xl rounded-tl-md shadow-soft border border-neutral-200 dark:border-neutral-700">
-                      <div className="px-5 py-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="flex space-x-1.5">
-                            <div className="w-2.5 h-2.5 bg-primary-500 rounded-full animate-bounce"></div>
-                            <div className="w-2.5 h-2.5 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '0.15s' }}></div>
-                            <div className="w-2.5 h-2.5 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }}></div>
-                          </div>
-                          <span className="text-sm text-neutral-600 dark:text-neutral-400">
-                            AI가 답변을 생성하고 있습니다...
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+        <div className="container max-w-2xl mx-auto">
+          {messages.map((msg, idx) => {
+            const isLastAssistant =
+              msg.type === 'assistant' &&
+              idx === messages.length - 1 &&
+              typeof msg.confidence === 'number' &&
+              msg.confidence < 0.5;
+            if (msg.type === 'user') {
+              return <UserMessage key={msg.id} message={msg} onCopy={text => navigator.clipboard.writeText(text)} />;
+            }
+            return (
+              <React.Fragment key={msg.id}>
+                <AssistantMessage message={msg} onCopy={text => navigator.clipboard.writeText(text)} />
+                {isLastAssistant && (
+                  <FallbackMessage message="AI가 명확한 답변을 찾지 못했습니다. 질문을 더 구체적으로 입력해 주세요." />
+                )}
+              </React.Fragment>
+            );
+          })}
+          {isLoading && (
+            <div className="flex justify-center items-center py-6">
+              <div className="flex items-center space-x-2">
+                <div className="flex space-x-1">
+                  <div className="w-2.5 h-2.5 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '0.15s' }}></div>
+                  <div className="w-2.5 h-2.5 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }}></div>
+                  <div className="w-2.5 h-2.5 bg-primary-500 rounded-full animate-bounce" style={{ animationDelay: '0.45s' }}></div>
                 </div>
-              )}
-              <div ref={messagesEndRef} />
+                <span className="text-sm text-neutral-600 dark:text-neutral-400">
+                  AI가 답변을 생성하고 있습니다...
+                </span>
+              </div>
             </div>
           )}
+          <div ref={messagesEndRef} />
         </div>
       </main>
 
@@ -151,26 +137,9 @@ const ChatContainer: React.FC = () => {
           <div className="max-w-3xl mx-auto">
             <ChatInput
               onSend={handleSend}
-              questionType={questionType}
               isLoading={isLoading}
             />
             {/* 추가 UI 요소 (새 채팅, 내보내기 등) */}
-            {/* <div className="mt-4 flex justify-center items-center space-x-4">
-              <button onClick={handleNewChat} className="flex items-center space-x-2 text-xs text-neutral-500 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">
-                <RotateCcw className="h-3.5 w-3.5" />
-                <span>새 채팅</span>
-              </button>
-              <div className="h-4 w-px bg-neutral-300 dark:bg-neutral-600"></div>
-              <button onClick={handleExport} className="flex items-center space-x-2 text-xs text-neutral-500 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">
-                <Download className="h-3.5 w-3.5" />
-                <span>대화 내보내기</span>
-              </button>
-              <div className="h-4 w-px bg-neutral-300 dark:bg-neutral-600"></div>
-              <button className="flex items-center space-x-2 text-xs text-neutral-500 hover:text-primary-500 dark:hover:text-primary-400 transition-colors">
-                <History className="h-3.5 w-3.5" />
-                <span>이력 조회</span>
-              </button>
-            </div> */}
           </div>
         </div>
       </footer>

@@ -6,10 +6,12 @@ export interface ChatRequest {
 }
 
 export interface ChatResponse {
-  answer: string;
+  answer?: string;
   contexts?: string[]; // 답변 근거 (선택 사항)
   confidence?: number; // 답변 신뢰도 (0.0 ~ 1.0)
   processingTime?: number; // 답변 처리 시간 (밀리초)
+  intent?: string; // AI가 파악한 사용자 의도
+  parameters?: { [key: string]: any }; // 의도에 따른 매개변수
 }
 
 export interface ChatHistory {
