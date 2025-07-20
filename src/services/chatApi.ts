@@ -1,9 +1,9 @@
 import axios from 'axios';
 import type { ChatRequest, ChatResponse } from '../types/chat';
 
-// 배포 환경에서는 EC2 IP 주소 사용, 개발 환경에서는 localhost 사용
+// 프로덕션에서는 nginx 프록시 사용, 개발 환경에서는 localhost 사용
 const API_BASE_URL = import.meta.env.VITE_BACKEND_API_URL || 
-  (window.location.hostname === 'localhost' ? 'http://localhost:8080/api' : 'http://15.164.93.58:8080/api');
+  (window.location.hostname === 'localhost' ? 'http://localhost:8080/api' : '/api');
 
 const chatApiClient = axios.create({
   baseURL: API_BASE_URL,
