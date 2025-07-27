@@ -13,11 +13,23 @@
 
 ## 🛠 기술 스택
 
-- **Frontend**: React 18 + TypeScript + Vite
-- **UI**: Tailwind CSS + Headless UI
-- **상태관리**: Zustand
-- **HTTP 클라이언트**: Axios
-- **마크다운 렌더링**: React Markdown
+### 핵심 프론트엔드 스택
+- **React 18**: 최신 React 기능 (Concurrent Features, Suspense)
+- **TypeScript 5.x**: 정적 타입 검사 및 개발자 경험 향상
+- **Vite 4.x**: 빠른 개발 서버 및 번들링
+- **Tailwind CSS 3.x**: 유틸리티 기반 CSS 프레임워크
+- **Headless UI**: 접근성을 고려한 무스타일 UI 컴포넌트
+
+### 상태 관리 및 데이터 통신
+- **Zustand**: 경량 상태 관리 라이브러리
+- **Axios**: HTTP 클라이언트 (인터셉터, 에러 핸들링)
+- **React Query/TanStack Query**: 서버 상태 관리 (캐싱, 동기화)
+
+### UI/UX 라이브러리
+- **React Markdown**: 마크다운 렌더링 (AI 응답 포맷팅)
+- **Framer Motion**: 애니메이션 및 전환 효과
+- **React Hot Toast**: 알림 및 토스트 메시지
+- **Lucide React**: 아이콘 라이브러리
 
 ## 📋 요구사항
 
@@ -46,7 +58,39 @@ VITE_API_ENDPOINT=/api/chat
 VITE_DEV_MODE=true
 ```
 
-### 3. 개발 서버 실행
+### 3. API 통신 구조
+
+#### Backend API 연동
+```typescript
+// src/api/chatApi.ts
+import axios from 'axios';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT || '/api/chat';
+
+// 채팅 API 호출
+export interface ChatRequest {
+  question: string;
+  context_count?: number;
+}
+
+export interface ChatResponse {
+  answer: string;
+  confidence: number;
+  contexts: ContextInfo[];
+  intent?: string;
+}
+
+export const sendChatMessage = async (request: ChatRequest): Promise<ChatResponse> => {
+  const response = await axios.post<ChatResponse>(
+    `${API_BASE_URL}${API_ENDPOINT}`, 
+    request
+  );
+  return response.data;
+};
+```
+
+### 4. 개발 서버 실행
 
 ```bash
 npm run dev
